@@ -1,6 +1,8 @@
 project('spp', 'c')
 spp_version = '1.2.0'
 
+spp_includes = include_directories('.')
+
 configure_file(input: 'config.def.h',
   output: 'config.h',
   copy: true)
@@ -20,10 +22,12 @@ libspp = shared_library('spp', spp_files,
 
 spp_static_dep = declare_dependency(
   link_with: libspp_static,
+  include_directories: spp_includes,
 )
 
 spp_dep = declare_dependency(
-  link_with: libspp
+  link_with: libspp,
+  include_directories: spp_includes,
 )
 
 pkgconfig_mod = import('pkgconfig')

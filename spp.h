@@ -15,9 +15,9 @@
 #ifdef S_API
 #undef S_API
 #endif
-#if R_SWIG
+#if RZ_SWIG
   #define S_API export
-#elif R_INLINE
+#elif RZ_INLINE
   #define S_API inline
 #else
   #if defined(__GNUC__) && __GNUC__ >= 4
@@ -77,9 +77,9 @@ struct Tag *tags = (struct Tag *)&x##_tags; \
 struct Arg *args = (struct Arg *)&x##_args; \
 struct Proc *proc = &x##_proc;
 
-#if USE_R2
-#include <r_util.h>
-#define SStrBuf RStrBuf
+#if USE_RZ
+#include <rz_util.h>
+#define SStrBuf RzStrBuf
 #else
 typedef struct s_strbuf_t {
 	int len;

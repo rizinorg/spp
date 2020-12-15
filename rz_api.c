@@ -6,23 +6,23 @@
 #include <windows.h>
 #endif
 #include "spp.h"
-#include "r_api.h"
+#include "rz_api.h"
 
-SStrBuf *r_strbuf_new(const char *str) {
-	SStrBuf *s = R_NEW0 (SStrBuf);
-	if (str) r_strbuf_set (s, str);
+SStrBuf *rz_strbuf_new(const char *str) {
+	SStrBuf *s = RZ_NEW0 (SStrBuf);
+	if (str) rz_strbuf_set (s, str);
 	return s;
 }
 
-void r_strbuf_init(SStrBuf *sb) {
+void rz_strbuf_init(SStrBuf *sb) {
 	memset (sb, 0, sizeof (SStrBuf));
 }
 
-bool r_strbuf_set(SStrBuf *sb, const char *s) {
+bool rz_strbuf_set(SStrBuf *sb, const char *s) {
 	int l;
 	if (!sb) return false;
 	if (!s) {
-		r_strbuf_init (sb);
+		rz_strbuf_init (sb);
 		return true;
 	}
 	l = strlen (s);
@@ -43,14 +43,14 @@ bool r_strbuf_set(SStrBuf *sb, const char *s) {
 	return true;
 }
 
-bool r_strbuf_append(SStrBuf *sb, const char *s) {
+bool rz_strbuf_append(SStrBuf *sb, const char *s) {
 	int l = strlen (s);
 	if (l < 1) {
 		return false;
 	}
 	if ((sb->len + l + 1) < sizeof (sb->buf)) {
 		memcpy (sb->buf + sb->len, s, l + 1);
-		R_FREE (sb->ptr);
+		RZ_FREE (sb->ptr);
 	} else {
 		int newlen = sb->len + l + 128;
 		char *p = sb->ptr;
@@ -76,30 +76,30 @@ bool r_strbuf_append(SStrBuf *sb, const char *s) {
 	return true;
 }
 
-char *r_strbuf_get(SStrBuf *sb) {
+char *rz_strbuf_get(SStrBuf *sb) {
 	return sb? (sb->ptr? sb->ptr: sb->buf) : NULL;
 }
 
-char *r_strbuf_drain(SStrBuf *sb) {
+char *rz_strbuf_drain(SStrBuf *sb) {
 	char *res = sb->ptr? sb->ptr: strdup (sb->buf);
 	sb->ptr = NULL;
-	r_strbuf_fini (sb);
+	rz_strbuf_fini (sb);
 	free (sb);
 	return res;
 }
 
-void r_strbuf_free(SStrBuf *sb) {
-	r_strbuf_fini (sb);
+void rz_strbuf_free(SStrBuf *sb) {
+	rz_strbuf_fini (sb);
 	free (sb);
 }
 
-void r_strbuf_fini(SStrBuf *sb) {
+void rz_strbuf_fini(SStrBuf *sb) {
 	if (sb && sb->ptr)
-		R_FREE (sb->ptr);
+		RZ_FREE (sb->ptr);
 }
 
 /* --------- */
-int r_sys_setenv(const char *key, const char *value) {
+int rz_sys_setenv(const char *key, const char *value) {
 	if (!key) {
 		return 0;
 	}
@@ -118,7 +118,7 @@ int r_sys_setenv(const char *key, const char *value) {
 #endif
 }
 
-char *r_sys_getenv(const char *key) {
+char *rz_sys_getenv(const char *key) {
 #if __WINDOWS__
 	DWORD dwRet;
 	char *envbuf = NULL, *tmp_ptr;
@@ -161,7 +161,7 @@ err_r_sys_get_env:
 #endif
 }
 
-int r_sys_getpid() {
+int rz_sys_getpid() {
 #if __UNIX__
 	return getpid();
 #elif __WINDOWS__
